@@ -1,20 +1,38 @@
 package block
 
-import "fmt"
+import (
+	"github.com/SamanNsr/cryptochain/utils/date_utils"
+	"github.com/SamanNsr/cryptochain/utils/hash_utils"
+)
 
 type Block struct {
 	timestamp string
-	lastHash string
-	hash string
-	data string
+	lastHash []byte
+	hash []byte
+	data interface{}
 }
 
-func _init_(timestamp string, lastHash string , hash string, data string) *Block {
-	return &Block{timestamp, lastHash, hash, data}
+func Genesis() *Block{
+	return &Block{
+		 "01/01/01",
+		   hash_utils.CryptoHash("foo-lastHash"),
+		     hash_utils.CryptoHash("foo-hash"),
+		     "foo-data",
+		}
 }
 
-func main() {
-	var block1 *Block
-	block1 = _init_("01/01/01", "foo-lastHash", "foo-hash", "foo-data")
-	fmt.Print(*block1)
+func (b *Block) NewBlock(timestamp string, lastHash []byte , hash []byte, data string) {
+	b.timestamp = timestamp
+	b.lastHash = lastHash
+	b.hash = hash
+	b.data = data
+}
+
+func (b *Block) MineBlock(lastBlock *Block, data string) {
+	timestamp := date_utils.GetNowString()
+	lastHash := lastBlock.hash
+ 	b.timestamp = timestamp
+ 	b.lastHash = lastHash
+ 	b.data = data
+ 	b.hash = hash_utils.CryptoHash(timestamp ,lastHash, data)
 }
