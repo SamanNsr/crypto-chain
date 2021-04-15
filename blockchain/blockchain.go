@@ -1,5 +1,7 @@
 package blockchain
 
+import "github.com/SamanNsr/cryptochain/utils/hash_utils"
+
 type Blockchain struct {
 	chain []*Block
 }
@@ -15,21 +17,37 @@ func (bc *Blockchain) AddBlock(data string) {
 	bc.chain = append(bc.chain, newBlock)
 }
 
-//concurrency may needed
 func IsValidChain(chain []*Block) bool {
 	if chain[0] != Genesis() {
 		return false
 	}
 
-	for i := 0; i < len(chain); i++ {
-		block := chain[i]
-		actualLastHash := chain[i-1].hash
+	statusChannel := make(chan bool, len(chain))
 
-		if block.lastHash != actualLastHash {
+	for i := 0; i < len(chain); i++ {
+		go func(i int) {
+			block := chain[i]
+			actualLastHash := chain[i-1].hash
+
+			if block.lastHash != actualLastHash {
+				statusChannel <- false
+			} else {
+				statusChannel <- true
+			}
+		}(i)
+
+		validatedHash := hash_utils.CryptoHash(chain[i].timestamp, chain[i].lastHash, chain[i].data)
+
+		if chain[i].hash != validatedHash {
 			return false
 		}
 
+		for i := 0; i < len(chain); i++ {
+			status := <-statusChannel
+			if status == false {
+				break
+			}
+		}
 	}
-
 	return true
 }
