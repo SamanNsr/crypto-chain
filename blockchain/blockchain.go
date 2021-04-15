@@ -1,6 +1,9 @@
 package blockchain
 
-import "github.com/SamanNsr/cryptochain/utils/hash_utils"
+import (
+	"fmt"
+	"github.com/SamanNsr/cryptochain/utils/hash_utils"
+)
 
 type Blockchain struct {
 	chain []*Block
@@ -50,4 +53,18 @@ func IsValidChain(chain []*Block) bool {
 		}
 	}
 	return true
+}
+
+func (bc *Blockchain) ReplaceChain(chain []*Block){
+	if len(chain) <= len(bc.chain) {
+		fmt.Errorf("oops, incoming chain must be longer")
+		return
+	}
+	if IsValidChain(chain){
+		fmt.Errorf("oops, incoming chain must be valid")
+		return
+	}
+
+	fmt.Println("Replacing chain with")
+	bc.chain = chain
 }
