@@ -1,7 +1,9 @@
 package main
 
-import "github.com/SamanNsr/cryptochain/blockchain"
+import (
+	"github.com/SamanNsr/cryptochain/app"
+)
 
 func main() {
-	blockchain.Test()
+	app.StartApplication()
 }
