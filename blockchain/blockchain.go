@@ -3,6 +3,7 @@ package blockchain
 import (
 	"fmt"
 	"github.com/SamanNsr/cryptochain/utils/hash_utils"
+	"math"
 )
 
 type Blockchain struct {
@@ -49,6 +50,10 @@ func IsValidChain(chain []*Block) bool {
 		)
 
 		if chain[i].hash != validatedHash {
+			return false
+		}
+
+		if math.Abs(float64(chain[i-1].difficulty-chain[i].difficulty)) > 1 {
 			return false
 		}
 

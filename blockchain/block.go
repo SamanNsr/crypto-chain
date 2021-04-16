@@ -52,7 +52,9 @@ func MineBlock(lastBlock *Block, data string) *Block {
 		nonce++
 		timestamp = date_utils.GetNow()
 		difficulty = adjustDifficulty(lastBlock, date_utils.GetNow())
-		hash = hash_utils.CryptoHash(timestamp, lastHash, data, nonce, difficulty)
+		hash = hash_utils.HexToBinary(
+			hash_utils.CryptoHash(timestamp, lastHash, data, nonce, difficulty),
+		)
 	}
 	return NewBlock(timestamp, lastHash, hash, data, nonce, difficulty)
 }

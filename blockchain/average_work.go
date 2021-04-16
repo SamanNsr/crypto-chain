@@ -26,7 +26,7 @@ func Test() {
 		average = totalTime / int64(len(times))
 
 		fmt.Printf(
-			"The time to mine the block is: %d. Difficulty: %d ms. Average time: %d \n",
+			"The time to mine the block is: %d. Difficulty: %d. Average time: %d ms \n",
 			timeDiff, nextBlock.difficulty, average,
 		)
 	}
