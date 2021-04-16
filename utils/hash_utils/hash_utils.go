@@ -3,7 +3,7 @@ package hash_utils
 import (
 	"crypto"
 	"crypto/sha256"
-	"encoding/base64"
+	"encoding/hex"
 	"fmt"
 )
 
@@ -27,6 +27,6 @@ func CryptoHash(objs ...interface{}) string {
 	for _, ob := range objs {
 		fmt.Fprint(digester, ob)
 	}
-	sha := base64.URLEncoding.EncodeToString(digester.Sum(nil))
+	sha := hex.EncodeToString(digester.Sum(nil))
 	return sha
 }

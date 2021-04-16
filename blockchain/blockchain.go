@@ -9,14 +9,19 @@ type Blockchain struct {
 	chain []*Block
 }
 
+func Init() *Blockchain {
+	return &Blockchain{
+		[]*Block{Genesis()},
+	}
+}
+
 func (bc *Blockchain) AddGenesis() {
-	bc.chain = append(bc.chain, Genesis())
+	chain := []*Block{Genesis()}
+	bc.chain = chain
 }
 
 func (bc *Blockchain) AddBlock(data string) {
-	var newBlock *Block
-	newBlock.MineBlock(bc.chain[len(bc.chain)-1], data)
-
+	newBlock := MineBlock(bc.chain[len(bc.chain)-1], data)
 	bc.chain = append(bc.chain, newBlock)
 }
 
@@ -39,7 +44,9 @@ func IsValidChain(chain []*Block) bool {
 			}
 		}(i)
 
-		validatedHash := hash_utils.CryptoHash(chain[i].timestamp, chain[i].lastHash, chain[i].data)
+		validatedHash := hash_utils.CryptoHash(
+			chain[i].timestamp, chain[i].lastHash, chain[i].data, chain[i].nonce, chain[i].difficulty,
+		)
 
 		if chain[i].hash != validatedHash {
 			return false
@@ -55,12 +62,12 @@ func IsValidChain(chain []*Block) bool {
 	return true
 }
 
-func (bc *Blockchain) ReplaceChain(chain []*Block){
+func (bc *Blockchain) ReplaceChain(chain []*Block) {
 	if len(chain) <= len(bc.chain) {
 		fmt.Errorf("oops, incoming chain must be longer")
 		return
 	}
-	if IsValidChain(chain){
+	if IsValidChain(chain) {
 		fmt.Errorf("oops, incoming chain must be valid")
 		return
 	}
